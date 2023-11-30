@@ -1,1 +1,118 @@
-<p>hello world!hhhhh</p>
+<!doctype html>
+<html>
+	<head>
+		<title>我的至尊网页</title>
+	</head>
+	<body>
+		<pre>
+#include&lt;iostream&gt;
+using namespace std;
+#define	infinity	10000
+#define	max_vertex_num	20
+#define error 0
+#define ok 1
+
+typedef int status;
+typedef	int	vrtype;
+typedef	int	infotype;
+typedef	char vertextype;//鼎点的数据类型现在是cahr 
+typedef	int	graphkind;	//（1-有向图，2-有向网，3-无向图，4-无向网）
+
+//enum graphkind{DG,DN,AG,AN}; 
+
+typedef	struct	arccell{
+	vrtype 		adj;
+	infotype* 	info;
+}arccell,adjmatrix[max_vertex_num][max_vertex_num];
+
+typedef struct{
+	vertextype	vexs[max_vertex_num];
+	adjmatrix	arcs;
+	int			vexnum, arcnum;
+	graphkind	kind;
+}mgraph;
+
+int locatevex(mgraph g,vertextype v){
+	int i=0;
+	for(;i&lt;=g.vexnum-1;i++){
+		if(g.vexs[i]==v){
+			return i;
+		}
+	}
+	return -1;
+} 
+
+status createdn(mgraph &amp;g){
+	int i,j,k;
+	vrtype w;
+	vertextype v1,v2;
+	cout&lt;&lt;"请输入有向网G的顶点数，弧数:"; 
+	cin&gt;&gt;g.vexnum&gt;&gt;g.arcnum;
+	cout&lt;&lt;"请输入"&lt;&lt;g.vexnum&lt;&lt;"个顶点的值";
+	for(i=0;i&lt;g.vexnum;i++){
+		cin&gt;&gt;g.vexs[i];
+	} 
+	
+	for(i=0;i&lt;g.vexnum;i++){
+		for(j=0;j&lt;g.vexnum;j++){
+			g.arcs[i][j].adj=infinity;
+		}
+	}
+	cout&lt;&lt;"请输入"&lt;&lt;g.arcnum&lt;&lt;"条弧的弧尾 弧头 权值：" &lt;&lt;endl;
+	for(k=0;k&lt;g.arcnum;k++){
+		cin&gt;&gt;v1&gt;&gt;v2&gt;&gt;w;
+		i=locatevex(g,v1);
+		j=locatevex(g,v2);
+		g.arcs[i][j].adj=w;
+	} 
+	g.kind=2;
+}
+
+status printdn(mgraph g){
+	int i,j;
+	printf("g.vexnum, g.arcnum: %d  %d\n",g.vexnum, g.arcnum);
+	for(i=0;i&lt;g.vexnum;i++){
+		printf("g.vexs[%d]:%c ",i,g.vexs[i]);
+	}
+	printf("\n");
+	for(i=0;i&lt;g.vexnum;i++){ 
+		for(j=0;j&lt;g.vexnum;++j){//老师的j是j=i 
+			printf("\t%d",g.arcs[i][j].adj);
+		}
+		printf("\n");
+	}
+	return ok;
+}
+
+int tddn(mgraph g, vertextype v){
+	int vi=0;
+	int sum=0;
+	vi=locatevex(g,v);
+	for(int j=0;j&lt;g.vexnum;j++){
+		if(g.arcs[vi][j].adj&lt;infinity){
+			sum++;
+		}
+		if(g.arcs[j][vi].adj&lt;infinity){
+			sum++;
+		}
+		
+	}
+	
+	
+	return sum;
+}
+
+
+int  main(){
+	mgraph g;
+	printf("1-有向图，2-有向网，3-无向图，4-无向网\n");
+	createdn(g);
+	printdn(g);
+	for(int i=0;i&lt;g.vexnum;i++){
+		printf("%c的度为:%d\n",g.vexs[i],tddn(g,g.vexs[i]));
+	}
+	return 0;
+} 
+		</pre>
+	</body>
+</html>
