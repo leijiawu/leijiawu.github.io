@@ -1,0 +1,143 @@
+@charset "utf-8";
+/* CSS Document */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+	
+}
+body{
+	background-color: rgba(246,234,255,1.00)
+}
+.ul1{
+	position: absolute;
+	margin:0 auto;
+	z-index: 20;
+}
+.ul1 li{
+	float: left;
+	width: 130px;
+	height: 50px;
+	/*border: 1px solid green;*/
+	align: center;
+	z-index: 20;
+}
+
+.ul1 li a{
+	
+	height: auto;
+	color: white;
+	text-align: center;
+	padding-top: 10px;
+	position: absolute;
+	top:0px;
+	text-decoration: none;
+	font-size: 16px;
+	/*border:1px solid red;*/
+	width:130px;
+	height: 40px;
+	z-index: 20;
+	
+}
+
+.ul1 li a:hover{
+    background-color: rgba(255,142,215,1.00);
+}
+
+.nav1{
+	position: fixed;
+	top:0;
+	left:0;
+	right:0;
+	width: auto;
+	height: 50px;
+	background-color:rgba(55,141,243,1.00);
+	margin: 0 auto;
+	z-index: 10;
+	box-shadow: rgba(255,142,215,1.00) 0px 10px 0px 0px ;
+}
+
+.nav2{
+	position: fixed;
+	top:0;
+	left:0;
+	right:0;
+	width: 700px;
+	height: 50px;
+	background-color:rgba(55,141,243,1.00);
+	margin: 0 auto;
+}
+
+.main1{
+	/*background-color:rgba(255,228,149,1.00);*/
+	width: 1700px;
+	height: 3000px;
+	position: absolute;
+	margin: 0 auto;
+	top:50px;
+	left: 0;
+	right:0;
+	
+}
+
+.left1{
+	position: fixed;
+	left: 0px;
+	top:100px;
+	background:rgba(55,141,243,1.00);
+	width: 250px;
+	height: 900px;
+	overflow: scroll;
+	color: white;
+}
+
+.left1 ul li{
+	display: flex;
+	padding: 7px;
+	background-color: rgba(55,141,243,1.00);
+	width: 200px;
+	height:auto;
+	
+}
+
+.left1 li a{
+	background-color: rgba(55,141,243,1.00);
+	width: 180px;
+	height:20px;
+	padding:2px;
+	color:white;
+	text-decoration: none;
+}
+
+.left1 li a:hover{
+	color: rgba(255,142,215,1.00);
+}
+
+.details1{
+	padding: 10px;
+}
+
+.main2{
+	position: absolute;
+	width: 1200px;
+	height:auto;
+	top: 70px;
+	left:0;
+	right:-200px;
+	margin:0 auto;
+	
+}
+.contains{
+	position: relative;;
+	width: 1100px;
+	height: auto;
+	padding: 10px;
+	left:0;
+	right: 0;
+	top:70px;
+	margin: 0 auto;
+	padding-top: 150px;
+	border-top: 2px dashed rgba(80,80,0.5);
+	border-bottom: 70px solid rgba(0,0,0,0.00);
+	font-size: 20px;
+}

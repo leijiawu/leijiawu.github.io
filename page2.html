@@ -3,8 +3,8 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>我的至尊网站</title>
-		<link rel="stylesheet" type="text/css" href="index.css">
+		<title>CG课内实验</title>
+		<link rel="stylesheet" type="text/css" href="page2.css">
 	</head>
 	<body>
 		<div class="nav1">
@@ -19,11 +19,18 @@
 			</div>
 		</div>
 		<div class="main1">
-			
-			<div class="m1">
-				<p class="p1">数据结构-图-实验1: 创建图</p>
-				<div class="mm1">
-					
+			<div class="left1">
+				<details class="details1">
+					<summary>数据结构-图-课内</summary>
+					<ul>
+						<li><a href="#tu_1">1、创建图</a></li>
+						<li><a href="#tu_2">2、求图的顶点</a></li>
+					</ul>
+				</details>
+			</div>
+			<div class="main2">
+				<div class="contains" id="tu_1">
+					<p>1、创建图</p>
 					<pre>
 #include&lt;iostream&gt;
 #include&lt;stdio.h&gt;
@@ -119,16 +126,11 @@ int  main(){
 	createdn(g);
 	printdn(g);
 	return 0;
-} 
-		
-
+} 					
 					</pre>
 				</div>
-			</div>
-			
-			<div class="m2">
-				<div class="mm2">
-					<p class="p2">数据结构-图-实验2： 求顶点度数</p>
+				<div class="contains" id="tu_2">
+					<p>2、求顶点的度</p>
 					<pre>
 #include&lt;iostream&gt;
 #include&lt;stdio.h&gt;
@@ -247,247 +249,11 @@ int  main(){
 	}
 	
 	return 0;
-} 
-		
-
-					</pre>
+}					
 					
+					</pre>
 				</div>
-			</div>
-			
-			<div class="m3">
-				<p class="p3">22计科第6章扩展实验2：树及二叉树 1.递归算法：求二叉树第k层的结点数</p>
-				<div class="mm3">
-<pre>
-#include&lt;iostream&gt;
-#include&lt;stdio.h&gt;
-#include&lt;stdlib.h&gt;
-#define error 0
-#define ok 1 
-
-using namespace std;
-
-typedef int status;
-typedef char telemtype;
-
-typedef struct biTNode{
-	telemtype data;
-	struct biTNode *lchild,*rchild;
-}biTNode,*bitree;
-
-int depthbitree(bitree t){
-	if(t==NULL){
-		return (0);
-	}
-	else{
-		int m=depthbitree(t-&gt;lchild);
-		int n=depthbitree(t-&gt;rchild);
-		if(m&gt;n){
-			return m+1;
-		}
-		else{
-			return n+1;
-		}
-	}
-} 
-
-
-status createbitree(bitree &amp;t){
-	
-	char ch;
-	scanf("%c",&amp;ch);
-	if(ch==' '){
-		t=NULL;
-	}else if(ch!='\n'){
-		t=(biTNode*)malloc(sizeof(biTNode));
-		if(!t)return error;
-		//bitree t;
-		t-&gt;data=ch;
-		createbitree(t-&gt;lchild);
-		createbitree(t-&gt;rchild);
-	}
-	return ok;
-	
-}
-
-status destroybitree(bitree &amp;t){
-	if(t){
-		if(t-&gt;lchild){
-			destroybitree(t-&gt;lchild);
-		}
-		if(t-&gt;rchild){
-			destroybitree(t-&gt;rchild);
-		}
-		free(t);
-	}
-	return ok;
-}
-
-int layernode(bitree t,telemtype ch,int m,int &amp;layer){
-	if(t==NULL){
-		return error;
-	}
-	
-	if(t){
-		m++;
-		if(t-&gt;data==ch){
-			layer=m;
-			
-		}
-		layernode(t-&gt;lchild,ch,m,layer);
-		layernode(t-&gt;rchild,ch,m,layer);
-	}
-    return ok;
-}
-
-int getlevelnodes(bitree t,int k){
-	if(t==NULL){
-		return error;
-	}
-	if(k==1){
-		return 1;
-	}
-	if(t){
-		return getlevelnodes(t-&gt;lchild,k-1)+getlevelnodes(t-&gt;rchild,k-1);
-	}
-	
-}
-
-int main()
-{
-    bitree bt;
-    createbitree(bt);
-    int k;
-    scanf("%d",&amp;k);
-    printf("%d",getlevelnodes(bt,k));
-    destroybitree(bt);
-    return 0;
-}
-
-</pre>				
-				</div>
-			</div>
-			
-			<div class="m4">
-				<p class="p4">第六章拓展实验：第2题</p>
-				<div class="mm4">
-<pre>
-#include&lt;iostream&gt;
-#include&lt;queue&gt;
-#include&lt;stdio.h&gt;
-#include&lt;stdlib.h&gt;
-#define error 0
-#define ok 1 
-
-using namespace std;
-
-typedef int status;
-typedef char telemtype;
-
-typedef struct biTNode{
-	telemtype data;
-	struct biTNode *lchild,*rchild;
-}biTNode,*bitree;
-
-
-status levelordertraverse(bitree bt)
-{
-	queue&lt;bitree&gt; q;
-	bitree p=NULL;
-	if(bt){
-		q.push(bt);//进队列，q的类型是STL中的队列
-	}
-    
-    while(!q.empty())
-    {
-        //1、输出队头元素的值；
-        //2、孩子非空，分别进入队列。
-        //cout&lt;&lt;q.front()-&gt;data&lt;&lt;endl;
-        p=q.front();
-        q.pop();
-        cout&lt;&lt;p-&gt;data;
-        if(p-&gt;lchild){
-        	q.push(p-&gt;lchild);
-        }
-        if(p-&gt;rchild){
-        	q.push(p-&gt;rchild);
-        }
-     
-    }
-    cout&lt;&lt;endl;
-    return ok;
-}
-
-status createbitree(bitree &amp;t){
-	
-	char ch;
-	scanf("%c",&amp;ch);
-	if(ch==' '){
-		t=NULL;
-	}else if(ch!='\n'){
-		t=(biTNode*)malloc(sizeof(biTNode));
-		if(!t)return error;
-		//bitree t;
-		t-&gt;data=ch;
-		createbitree(t-&gt;lchild);
-		createbitree(t-&gt;rchild);
-	}
-	return ok;
-	
-}
-
-status destroybitree(bitree &amp;t){
-	if(t){
-		if(t-&gt;lchild){
-			destroybitree(t-&gt;lchild);
-		}
-		if(t-&gt;rchild){
-			destroybitree(t-&gt;rchild);
-		}
-		free(t);
-	}
-	return ok;
-}
-int main()
-{
-    bitree bt;
-    createbitree(bt);
-    levelordertraverse(bt);
-    destroybitree(bt);
-    return 0;
-}
-
-</pre>	
-				</div>
-			</div>
-			
-			<div class="m5">
-				<p class="p5">第六章拓展实验：第3题</p>
-				<div class="mm5">
-<pre>
-#include&lt;iostream&gt;
-using namespace std;
-int num = 0;
-int f[10][10];
-void backtracking(int h, int l) {
-	for (int i = 1; i &lt;= 4; i++) {
-		for (int j = 1; j &lt;= 5; j++) {
-			f[i][j]= f[i - 1][j]+ f[i][j - 1];
-			f[1][1] = 1;
-		}
-	}
-	num = f[4][5];
-}
-
-int main() {
-	
-	backtracking(0, 0);
-	cout &lt;&lt; num;
-	
-	return 0;
-}
-</pre>					
-				</div>
+				
 			</div>
 		</div>
 	</body>

@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="zn-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<title>CG拓展题</title>
+		<link rel="stylesheet" type="text/css" href="page2.css">
+	</head>
+	<body>
+		<div class="nav1">
+			<div class="nav2">
+				<ul class="ul1">
+  				<li><a href="index.html">主页</a></li>
+  				<li><a href="page2.html">CG课内实验</a></li>
+  				<li><a href="page3.html">CG拓展题</a></li>
+				<li><a href="page4.html">学习资料</a></li>
+				<li><a href="page5.html">实用网站</a></li>
+			  </ul>
+			</div>
+		</div>
+		<div class="main1">
+			<div class="left1">
+				<details class="details1">
+					<summary>数据结构-图-拓展实验</summary>
+					<ul>
+						<li><a href="#tu_1">1、第一题</a></li>
+						<li><a href="#tu_2">2、第二题</a></li>
+						<li><a href="#tu_3">2、第三题</a></li>
+						<li><a href="#tu_4">2、第四题</a></li>
+						<li><a href="#tu_5">2、第五题</a></li>
+						<li><a href="#tu_6">2、第六题</a></li>
+					</ul>
+				</details>
+			</div>
+			<div class="main2">
+				<div class="contains" id="tu_1">
+					<p>第一题</p>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+#define error 0
+#define ok 1 
+
+using namespace std;
+
+typedef int status;
+typedef char telemtype;
+
+typedef struct biTNode{
+	telemtype data;
+	struct biTNode *lchild,*rchild;
+}biTNode,*bitree;
+
+int depthbitree(bitree t){
+	if(t==NULL){
+		return (0);
+	}
+	else{
+		int m=depthbitree(t-&gt;lchild);
+		int n=depthbitree(t-&gt;rchild);
+		if(m&gt;n){
+			return m+1;
+		}
+		else{
+			return n+1;
+		}
+	}
+} 
+
+
+status createbitree(bitree &amp;t){
+	
+	char ch;
+	scanf("%c",&amp;ch);
+	if(ch==' '){
+		t=NULL;
+	}else if(ch!='\n'){
+		t=(biTNode*)malloc(sizeof(biTNode));
+		if(!t)return error;
+		//bitree t;
+		t-&gt;data=ch;
+		createbitree(t-&gt;lchild);
+		createbitree(t-&gt;rchild);
+	}
+	return ok;
+	
+}
+
+status destroybitree(bitree &amp;t){
+	if(t){
+		if(t-&gt;lchild){
+			destroybitree(t-&gt;lchild);
+		}
+		if(t-&gt;rchild){
+			destroybitree(t-&gt;rchild);
+		}
+		free(t);
+	}
+	return ok;
+}
+
+int layernode(bitree t,telemtype ch,int m,int &amp;layer){
+	if(t==NULL){
+		return error;
+	}
+	
+	if(t){
+		m++;
+		if(t-&gt;data==ch){
+			layer=m;
+			
+		}
+		layernode(t-&gt;lchild,ch,m,layer);
+		layernode(t-&gt;rchild,ch,m,layer);
+	}
+    return ok;
+}
+
+int getlevelnodes(bitree t,int k){
+	if(t==NULL){
+		return error;
+	}
+	if(k==1){
+		return 1;
+	}
+	if(t){
+		return getlevelnodes(t-&gt;lchild,k-1)+getlevelnodes(t-&gt;rchild,k-1);
+	}
+	
+}
+
+int main()
+{
+    bitree bt;
+    createbitree(bt);
+    int k;
+    scanf("%d",&amp;k);
+    printf("%d",getlevelnodes(bt,k));
+    destroybitree(bt);
+    return 0;
+}
+
+					</pre>
+				</div>
+				<div class="contains" id="tu_2">
+					<p>第二题</p>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;queue&gt;
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+#define error 0
+#define ok 1 
+
+using namespace std;
+
+typedef int status;
+typedef char telemtype;
+
+typedef struct biTNode{
+	telemtype data;
+	struct biTNode *lchild,*rchild;
+}biTNode,*bitree;
+
+
+status levelordertraverse(bitree bt)
+{
+	queue&lt;bitree&gt; q;
+	bitree p=NULL;
+	if(bt){
+		q.push(bt);//进队列，q的类型是STL中的队列
+	}
+    
+    while(!q.empty())
+    {
+        //1、输出队头元素的值；
+        //2、孩子非空，分别进入队列。
+        //cout&lt;&lt;q.front()-&gt;data&lt;&lt;endl;
+        p=q.front();
+        q.pop();
+        cout&lt;&lt;p-&gt;data;
+        if(p-&gt;lchild){
+        	q.push(p-&gt;lchild);
+        }
+        if(p-&gt;rchild){
+        	q.push(p-&gt;rchild);
+        }
+     
+    }
+    cout&lt;&lt;endl;
+    return ok;
+}
+
+status createbitree(bitree &amp;t){
+	
+	char ch;
+	scanf("%c",&amp;ch);
+	if(ch==' '){
+		t=NULL;
+	}else if(ch!='\n'){
+		t=(biTNode*)malloc(sizeof(biTNode));
+		if(!t)return error;
+		//bitree t;
+		t-&gt;data=ch;
+		createbitree(t-&gt;lchild);
+		createbitree(t-&gt;rchild);
+	}
+	return ok;
+	
+}
+
+status destroybitree(bitree &amp;t){
+	if(t){
+		if(t-&gt;lchild){
+			destroybitree(t-&gt;lchild);
+		}
+		if(t-&gt;rchild){
+			destroybitree(t-&gt;rchild);
+		}
+		free(t);
+	}
+	return ok;
+}
+int main()
+{
+    bitree bt;
+    createbitree(bt);
+    levelordertraverse(bt);
+    destroybitree(bt);
+    return 0;
+}
+
+					</pre>
+				</div>
+				<div class="contains" id="tu_3">
+					<p>第三题</p>
+					<pre>
+#include&lt;iostream&gt;
+using namespace std;
+int num = 0;
+int f[10][10];
+void backtracking(int h, int l) {
+	for (int i = 1; i &lt;= 4; i++) {
+		for (int j = 1; j &lt;= 5; j++) {
+			f[i][j]= f[i - 1][j]+ f[i][j - 1];
+			f[1][1] = 1;
+		}
+	}
+	num = f[4][5];
+}
+
+int main() {
+	
+	backtracking(0, 0);
+	cout &lt;&lt; num;
+	
+	return 0;
+}
+					</pre>
+				</div>
+				<div class="contains" id="tu_4">
+					<p>第四题</p>
+					<pre>
+#include&lt;iostream&gt;
+using namespace std;
+int n, m, t, sx, sy, fx, fy,ans=0;
+int a[10][10];
+
+void dg(int sx, int sy) {
+	if (sx == fx &amp;&amp; sy == fy) {
+		ans++;
+		return;
+	}
+	if (sx &lt; 1 || sy &lt; 1) {
+		return;
+	}
+	else {
+		if (a[sx - 1][sy]) {
+
+			a[sx - 1][sy] = 0;
+			a[sx][sy] = 0;
+			dg(sx - 1, sy);
+			a[sx - 1][sy] = 1;
+			a[sx][sy] = 1;
+		}
+		if (a[sx][sy - 1]) {
+			a[sx][sy - 1] = 0;
+			a[sx][sy] = 0;
+			dg(sx, sy - 1);
+			a[sx][sy - 1] = 1;
+			a[sx][sy] = 1;
+		}
+		if (a[sx + 1][sy]) {
+			a[sx + 1][sy] = 0;
+			a[sx][sy] = 0;
+			dg(sx + 1, sy);
+			a[sx + 1][sy] = 1;
+			a[sx][sy] = 1;
+		}
+		if (a[sx][sy + 1]) {
+			a[sx][sy + 1] = 0;
+			a[sx][sy]=0;
+			dg(sx, sy + 1);
+			a[sx][sy + 1] = 1;
+			a[sx][sy]=1;
+		}
+	}
+}
+
+int main() {
+	cin &gt;&gt; n &gt;&gt; m &gt;&gt; t &gt;&gt; sx &gt;&gt; sy &gt;&gt; fx &gt;&gt; fy;
+	for (int i = 1; i &lt;= n; i++) {
+		for (int j = 1; j &lt;= m; j++) {
+			a[i][j] = 1;
+		}
+	}
+	for (int i = 1; i &lt;= t; i++) {
+		int zx, zy;
+		cin &gt;&gt; zx &gt;&gt; zy;
+		a[zx][zy] = 0;
+	}
+	dg(sx, sy);
+	cout &lt;&lt; ans;
+	return 0;
+}
+
+					</pre>
+				</div>
+				<div class="contains" id="tu_5">
+					<p>第五题</p>
+					<pre>
+#include&lt;iostream&gt;
+using namespace std;
+
+int a[1000][1000],n,ans=0,count3=0;
+
+int check(int ci,int cj){//可以放返回1，不能放返回0
+    for(int i=1;i&lt;=n;i++){
+        if(a[i][cj]==1&amp;&amp;i!=ci){
+            return 0;
+        }
+        if(a[ci][i]==1&amp;&amp;i!=cj){
+            return 0;
+        }
+    }
+
+    for(int i=ci,j=cj;i&gt;=1&amp;&amp;j&gt;=1;i--,j--){
+        if(a[i][j]==1&amp;&amp;i!=ci&amp;&amp;j!=cj){
+            return 0;
+        }
+    }
+    for(int i=ci,j=cj;i&lt;=n&amp;&amp;j&lt;=n;i++,j++){
+        if(a[i][j]==1&amp;&amp;i!=ci&amp;&amp;j!=cj){
+            return 0;
+        }
+    }
+
+    for(int i=ci,j=cj;i&lt;=n&amp;&amp;j&gt;=1;i++,j--){
+        if(a[i][j]==1&amp;&amp;i!=ci&amp;&amp;j!=cj){
+            return 0;
+        }
+    }
+
+    for(int i=ci,j=cj;i&gt;=1&amp;&amp;j&lt;=n;i--,j++){
+        if(a[i][j]==1&amp;&amp;i!=ci&amp;&amp;j!=cj){
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void dg(int si){
+
+    if(si&gt;n){
+        ans++;
+        if(count3&lt;3){
+            count3++;
+            for(int i=1;i&lt;=n;i++){
+                for(int j=1;j&lt;=n;j++){
+                    if(a[i][j]==1){
+                       cout&lt;&lt;j&lt;&lt;" ";
+                    }
+                }
+            }
+            cout&lt;&lt;endl;
+        }
+        
+        return;
+    }
+
+    for(int j=1;j&lt;=n;j++){
+        if(check(si,j)){
+            a[si][j]=1;
+            dg(si+1);
+            a[si][j]=0;
+        }
+    }
+    return;
+}
+
+
+int main(){
+    cin&gt;&gt;n;
+    for(int i=0;i&lt;=n;i++){
+       for(int j=0;j&lt;=n;j++){
+        a[i][j]=0;
+       }
+    }
+
+    dg(1);
+
+    cout&lt;&lt;ans;
+    return 0;
+}
+					</pre>
+				</div>
+				<div class="contains" id="tu_6">
+					<p>第六题</p>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+
+struct Tree{
+    int index;
+    int weight;
+    int parent;
+    int lchild,rchild;
+
+    int ischild;
+
+}tree[1005];
+
+int n;
+bool cmp1(Tree a,Tree b){
+    if(a.weight&lt;=b.weight){
+        if(a.weight==b.weight){
+            return a.index&lt;b.index;
+        }
+        else{
+            return a.weight&lt;b.weight;
+        }
+        
+    }
+    return a.weight&lt;=b.weight;
+    
+}
+
+bool cmp2(Tree a,Tree b){
+    return a.index&lt;b.index;
+}
+
+int main(){
+    
+    cin&gt;&gt;n;
+    int cre=0;
+    
+    for(int i=1;i&lt;=n;i++){
+        tree[i].index=i;
+        cin&gt;&gt;tree[i].weight;
+    }
+
+    sort(tree,tree+n+cre+1,cmp1);
+
+    for(int i=1;i&lt;=n+cre-1;i+=2){
+        cre++;
+
+        tree[n+cre].index=n+cre;
+        int ci=1,cj=2;
+
+        for(ci=1;ci&lt;=n+cre-2;ci++){
+
+            if(tree[ci].ischild!=1){
+                if(tree[ci+1].ischild!=1){
+                    cj=ci+1;
+                    
+                }
+                else{
+                    for(cj=ci+1;cj&lt;=n+cre-1;cj++){
+                        if(tree[cj].ischild!=1){
+                            break;
+                        }
+                    }
+                }
+                
+                break;
+            }
+        }
+
+        //cout&lt;&lt;"find!! "&lt;&lt;ci&lt;&lt;" "&lt;&lt;cj&lt;&lt;endl;
+
+        tree[n+cre].weight=tree[ci].weight+tree[cj].weight;
+
+        tree[n+cre].parent=0;
+        tree[n+cre].lchild=tree[ci].index;
+        tree[n+cre].rchild=tree[cj].index;
+
+        tree[ci].parent=tree[n+cre].index;
+        tree[ci].ischild=1;
+
+        tree[cj].parent=tree[n+cre].index;
+        tree[cj].ischild=1;
+
+        sort(tree,tree+n+cre+1,cmp1);
+        /*cout&lt;&lt;"paixul!!  "&lt;&lt;cre&lt;&lt;endl;
+        for(int i=1;i&lt;=n+cre;i++){
+           cout&lt;&lt;tree[i].index&lt;&lt;" "&lt;&lt;tree[i].weight&lt;&lt;endl;
+        }
+        cout&lt;&lt;endl;
+        */
+
+    }
+
+    sort(tree,tree+n+cre+1,cmp2);
+
+    for(int i=1;i&lt;=n+cre;i++){
+        cout&lt;&lt;i&lt;&lt;":"&lt;&lt;"weight="&lt;&lt;tree[i].weight&lt;&lt;" parent="&lt;&lt;tree[i].parent&lt;&lt;" lchild="&lt;&lt;tree[i].lchild&lt;&lt;" rchild="&lt;&lt;tree[i].rchild&lt;&lt;endl;
+    }
+
+    return 0;
+}
+					</pre>
+				</div>
+				
+			</div>
+		</div>
+	</body>
+</html>
