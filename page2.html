@@ -24,7 +24,9 @@
 					<summary>数据结构-图-课内</summary>
 					<ul>
 						<li><a href="#tu_1">1、创建图</a></li>
-						<li><a href="#tu_2">2、求图的顶点</a></li>
+						<li><a href="#tu_2">2、求图的顶点的度</a></li>
+						<li><a href="#tu_3">3、图（数组表示法）深度遍历</a></li>
+						<li><a href="#tu_4">4、图（数组表示法）广度遍历</a></li>
 					</ul>
 				</details>
 			</div>
@@ -253,6 +255,344 @@ int  main(){
 					
 					</pre>
 				</div>
+				
+				<div class="contains" id="tu_3">
+					<p>3、图（数组表示法）深度遍历</p>
+					<pre>
+
+#include&lt;iostream&gt;
+#include&lt;stdio.h&gt;
+using namespace std;
+#define	infinity	10000
+#define	max_vertex_num	20
+#define error 0
+#define ok 1
+
+typedef int status;
+typedef	int	vrtype;
+typedef	int	infotype;
+typedef	char vertextype;//鼎点的数据类型现在是cahr 
+typedef	int	graphkind;	//（1-有向图，2-有向网，3-无向图，4-无向网）
+
+bool visited[max_vertex_num+1];
+
+//enum graphkind{DG,DN,AG,AN}; 
+
+typedef	struct	arccell{
+	vrtype 		adj;
+	infotype* 	info;
+}arccell,adjmatrix[max_vertex_num][max_vertex_num];
+
+typedef struct{
+	vertextype	vexs[max_vertex_num];
+	adjmatrix	arcs;
+	int			vexnum, arcnum;
+	graphkind	kind;
+}mgraph;
+
+int locatevex(mgraph g,vertextype v){
+	int i=0;
+	for(;i&lt;=g.vexnum-1;i++){
+		if(g.vexs[i]==v){
+			return i;
+		}
+	}
+	return -1;
+} 
+
+status createdn(mgraph &amp;g){
+	int i,j,k;
+	vrtype w;
+	int kd;
+	vertextype v1,v2;
+	//cout&lt;&lt;"请输入2和有向网G的顶点数，弧数:"; 
+	cin&gt;&gt;kd&gt;&gt;g.vexnum&gt;&gt;g.arcnum;
+	//cout&lt;&lt;"请输入"&lt;&lt;g.vexnum&lt;&lt;"个顶点的值";
+	for(i=0;i&lt;g.vexnum;i++){
+		cin&gt;&gt;g.vexs[i];
+	} 
+	
+	for(i=0;i&lt;g.vexnum;i++){
+		for(j=0;j&lt;g.vexnum;j++){
+			g.arcs[i][j].adj=infinity;
+		}
+	}
+	//cout&lt;&lt;"请输入"&lt;&lt;g.arcnum&lt;&lt;"条弧的弧尾 弧头 权值：" &lt;&lt;endl;
+	for(k=0;k&lt;g.arcnum;k++){
+		cin&gt;&gt;v1&gt;&gt;v2&gt;&gt;w;
+		i=locatevex(g,v1);
+		j=locatevex(g,v2);
+		g.arcs[i][j].adj=w;
+	} 
+	g.kind=kd;
+	return ok;
+}
+
+int firstadjvex(mgraph g,int v){
+	if(v&lt;0||v&gt;=g.vexnum){
+		return -1;
+	}
+	for(int j=0;j&lt;g.vexnum;j++){
+		if(g.arcs[v][j].adj!=infinity){ 
+			return j;
+		}
+	}
+	return -1;
+}
+
+int nextadjvex(mgraph g, int v, int w){
+	if(v&lt;0||v&gt;=g.vexnum){
+		return -1;
+	}
+	
+	for(int j=w+1;j&lt;g.vexnum;j++){
+		if(g.arcs[v][j].adj!=infinity){
+			return j;
+		}
+	}
+	return -1;
+}
+
+void dfs(mgraph g, int v){
+	visited[v]=true;
+	cout&lt;&lt;g.vexs[v];
+	for(int w=firstadjvex(g,v);w&gt;=0;w=nextadjvex(g,v,w)){
+		if(!visited[w]){
+			dfs(g,w);
+		}
+	}
+}
+
+
+void dfstraverse(mgraph g){
+	int v;
+	for(v=0;v&lt;g.vexnum;++v) {
+		visited[v]=false;
+	}
+	for(v=0;v&lt;g.vexnum;++v){
+		if(!visited[v]){
+			dfs(g,v);
+		}
+	}
+}
+
+int  main(){
+	mgraph g;
+	createdn(g);
+	printf("dfs: ");
+	dfstraverse(g);
+	cout&lt;&lt;endl;
+	
+	return 0;
+} 
+					</pre>
+				</div>
+				<div class="contains" id="tu_4">
+					<p>4、图（数组表示法）广度遍历</p>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+using namespace std;
+#define	infinity	10000
+#define	max_vertex_num	20
+#define error 0
+#define ok 1
+
+typedef int status;
+typedef	int	vrtype;
+typedef	int	infotype;
+typedef	char vertextype;//鼎点的数据类型现在是cahr 
+typedef	int	graphkind;	//（1-有向图，2-有向网，3-无向图，4-无向网）
+
+bool visited[max_vertex_num+1];
+
+//enum graphkind{DG,DN,AG,AN}; 
+
+
+//链队列————————————————————————
+
+typedef int qelemtype;
+typedef struct qnode{
+	qelemtype data;
+	struct qnode *next;
+}qnode,*queueptr;
+
+typedef struct{
+	queueptr front;
+	queueptr rear;
+}linkqueue;
+
+status initqueue(linkqueue &amp;q)//初始化队列
+{
+  q.front=q.rear=(queueptr)malloc(sizeof(qnode));
+  if(!q.front) return error;
+  q.front-&gt;next=NULL;
+  return ok;
+}
+
+status destroyqueue(linkqueue &amp;q) //撤销队列
+{
+   while(q.front)
+   {
+      q.rear=q.front-&gt;next;
+      free(q.front);
+      q.front=q.rear;
+   }
+   return ok;
+}
+
+//判断队列是否为非空 
+status queueempty(linkqueue &amp;q){
+	if(q.front==q.rear)
+	return ok;
+	return error; 
+}
+
+//插入e为队尾元素 
+status enqueue(linkqueue &amp;q,qelemtype e){
+	  queueptr p;
+	  p=(queueptr)malloc(sizeof(qnode));
+      if(!p) return error;
+      p-&gt;data=e;
+      p-&gt;next=NULL;
+      q.rear-&gt;next=p;
+	  q.rear=p;
+	  return ok; 
+}
+
+//删除队头元素用e返回其值 
+status dequeue(linkqueue &amp;q,qelemtype &amp;e){
+	  queueptr p;
+	  p=(queueptr)malloc(sizeof(qnode));
+      if(!p) return error;
+      if(q.front==q.rear) return error;
+      p=q.front-&gt;next;
+      e=p-&gt;data;
+      q.front-&gt;next=p-&gt;next;
+      if(q.rear==p)
+      q.rear=q.front;
+	  return ok; 
+}
+
+
+//——————————————————————————— 
+
+
+typedef	struct	arccell{
+	vrtype 		adj;
+	infotype* 	info;
+}arccell,adjmatrix[max_vertex_num][max_vertex_num];
+
+typedef struct{
+	vertextype	vexs[max_vertex_num];
+	adjmatrix	arcs;
+	int			vexnum, arcnum;
+	graphkind	kind;
+}mgraph;
+
+int locatevex(mgraph g,vertextype v){
+	int i=0;
+	for(;i&lt;=g.vexnum-1;i++){
+		if(g.vexs[i]==v){
+			return i;
+		}
+	}
+	return -1;
+} 
+
+status createdn(mgraph &amp;g){
+	int i,j,k;
+	vrtype w;
+	int kd;
+	vertextype v1,v2;
+	//cout&lt;&lt;"请输入2和有向网G的顶点数，弧数:"; 
+	cin&gt;&gt;kd&gt;&gt;g.vexnum&gt;&gt;g.arcnum;
+	//cout&lt;&lt;"请输入"&lt;&lt;g.vexnum&lt;&lt;"个顶点的值";
+	for(i=0;i&lt;g.vexnum;i++){
+		cin&gt;&gt;g.vexs[i];
+	} 
+	
+	for(i=0;i&lt;g.vexnum;i++){
+		for(j=0;j&lt;g.vexnum;j++){
+			g.arcs[i][j].adj=infinity;
+		}
+	}
+	//cout&lt;&lt;"请输入"&lt;&lt;g.arcnum&lt;&lt;"条弧的弧尾 弧头 权值：" &lt;&lt;endl;
+	for(k=0;k&lt;g.arcnum;k++){
+		cin&gt;&gt;v1&gt;&gt;v2&gt;&gt;w;
+		i=locatevex(g,v1);
+		j=locatevex(g,v2);
+		g.arcs[i][j].adj=w;
+	} 
+	g.kind=kd;
+	return ok;
+}
+
+int firstadjvex(mgraph g,int v){
+	if(v&lt;0||v&gt;=g.vexnum){
+		return -1;
+	}
+	for(int j=0;j&lt;g.vexnum;j++){
+		if(g.arcs[v][j].adj!=infinity){ 
+			return j;
+		}
+	}
+	return -1;
+}
+
+int nextadjvex(mgraph g, int v, int w){
+	if(v&lt;0||v&gt;=g.vexnum){
+		return -1;
+	}
+	
+	for(int j=w+1;j&lt;g.vexnum;j++){
+		if(g.arcs[v][j].adj!=infinity){
+			return j;
+		}
+	}
+	return -1;
+}
+
+void bfstraverse(mgraph g){
+	int v,u,w;
+	for(int v=0;v&lt;g.vexnum;v++){
+		visited[v]=false;
+	}
+	linkqueue q;
+	initqueue(q);
+	for(v=0;v&lt;g.vexnum;v++){
+		if(!visited[v]){
+			visited[v]=true;
+			cout&lt;&lt;g.vexs[v];
+			enqueue(q,v);
+			while(!queueempty(q)){
+				dequeue(q,u);
+				for(w=firstadjvex(g,u);w&gt;=0;w=nextadjvex(g,u,w)){
+					if(!visited[w]){
+						visited[w]=true;
+						cout&lt;&lt;g.vexs[w];
+						enqueue(q,w);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+int  main(){
+	mgraph g;
+	createdn(g);
+	printf("bfs: ");
+	bfstraverse(g);
+	cout&lt;&lt;endl;
+	
+	return 0;
+} 
+					</pre>
+				</div>
+				
 				
 			</div>
 		</div>
