@@ -25,8 +25,15 @@
 					<ul>
 						<li><a href="#tu_1">1、创建图</a></li>
 						<li><a href="#tu_2">2、求图的顶点的度</a></li>
-						<li><a href="#tu_3">3、图（数组表示法）深度遍历</a></li>
-						<li><a href="#tu_4">4、图（数组表示法）广度遍历</a></li>
+						<li><a href="#tu_3">3、图-数组表示法DFS</a></li>
+						<li><a href="#tu_4">4、图-数组表示法BFS</a></li>
+					</ul>
+				</details>
+				<details class="details1">
+					<summary>简易算法-查找-课内</summary>
+					<ul>
+						<li><a href="#sstable_1">1、sstable顺序查找</a></li>
+						<li><a href="#sstable_2">2、sstable折半查找</a></li>
 					</ul>
 				</details>
 			</div>
@@ -593,6 +600,173 @@ int  main(){
 					</pre>
 				</div>
 				
+				<div class="contains" id="sstable_1">
+					<p>1、sstable顺序查找</p>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+
+#define ok 1
+#define error 0
+
+using namespace std;
+typedef int status;
+typedef int keytype;
+typedef struct{
+	keytype key;
+}elemtype;
+typedef struct{
+	elemtype *elem;
+	int length;
+}sstable;
+
+status createsstable(sstable &amp;st){  
+	int i,n;
+	//printf("please input the length of the sstable:");
+	scanf("%d",&amp;n);
+	st.length=n;
+	st.elem=(elemtype *)malloc((st.length+1)*sizeof(elemtype));
+	if(!st.elem) return error;
+	//printf("please input the data of the sstable:");
+	for (i=1;i&lt;=st.length;i++){
+		
+		scanf("%d",&amp;st.elem[i].key);
+		
+	}
+	//cout&lt;&lt;"endcreating"&lt;&lt;endl;
+	return ok;
+}
+
+int ssearch(sstable st,keytype key){
+	//cout&lt;&lt;"searching"&lt;&lt;endl;
+	for(int i=1;i&lt;=st.length;i++){
+		//cout&lt;&lt;"comparing "&lt;&lt;i&lt;&lt;endl;
+		if(st.elem[i].key==key){
+			return i;
+		}
+	}
+	//cout&lt;&lt;"oops!"&lt;&lt;endl;
+	return error;
+	
+}
+
+int main(){
+	sstable st;
+	keytype key;
+	int order;
+	
+	createsstable (st);
+	//while(1){
+		//printf("please  input  key :");
+		scanf("%d",&amp;key);
+	
+		order=ssearch(st,key);
+		//cout&lt;&lt;" orderis: "&lt;&lt;order;
+		cout&lt;&lt;order;
+	//}
+	
+	return 0;
+} 
+					</pre>
+				</div>
+				
+				<div class="contains" id="sstable_2">
+					<p>2、sstable折半查找</p>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+
+#define ok 1
+#define error 0
+using namespace std;
+typedef int status;
+typedef int keytype;
+typedef struct{
+	keytype key;
+}elemtype;
+typedef struct{
+	elemtype *elem;
+	int length;
+}sstable;
+
+
+status sort(sstable  &amp;st){
+	for(int i=1;i&lt;=st.length-1;i++){
+		for(int j=1;j&lt;=st.length-i;j++){
+			if(st.elem[j].key&gt;st.elem[j+1].key){
+				int tmp = st.elem[j].key;
+				st.elem[j].key=st.elem[j+1].key;
+				st.elem[j+1].key=tmp;
+			}
+		}
+	}
+}
+
+int bsearch(sstable st,keytype key){
+	int l=1, r=st.length;
+	int m=(l+r)/2;
+	if(key==st.elem[l].key){
+		return 1;
+	}
+	if(key==st.elem[r].key){
+		return st.length;
+	}
+	while(l&lt;r){
+		if(key==st.elem[m].key){
+			return m;
+		}else if(key&lt;st.elem[m].key){
+			r=m-1;
+			m=(l+r)/2;
+		}else{
+			l=m+1;
+			m=(l+r)/2; 
+		} 
+	}
+	if(l==r&amp;&amp;key==st.elem[l].key){
+		return l;
+	}
+	return error;
+}
+
+status createsstable(sstable &amp;st){  
+	int i,n;
+	//printf("please input the length of the sstable:");
+	scanf("%d",&amp;n);
+	st.length=n;
+	st.elem=(elemtype *)malloc((st.length+1)*sizeof(elemtype));
+	if(!st.elem) return error;
+	//printf("please input the data of the sstable:");
+	for (i=1;i&lt;=st.length;i++){
+		
+		scanf("%d",&amp;st.elem[i].key);
+		
+	}
+	//cout&lt;&lt;"endcreating"&lt;&lt;endl;
+	return ok;
+}
+
+int main(){
+	sstable st;
+	keytype key;
+	int order;
+	
+	createsstable (st);
+	sort(st);
+	
+	//while(1){
+	scanf("%d",&amp;key);
+	order=bsearch(st,key);
+	
+	//printf(" bsearch is:%d \n",order);
+	cout&lt;&lt;order;
+	//}
+	
+	return 0;
+}
+					</pre>
+				</div>
 				
 			</div>
 		</div>
