@@ -42,6 +42,12 @@
 						<li><a href="#tu_76">6、小民画画-欧拉</a></li>
 					</ul>
 				</details>
+				<details class="details1">
+					<summary>第九章-二叉树排序树</summary>
+					<ul>
+						<li><a href="#tu_91">1、二叉树排序树</a></li>
+					</ul>
+				</details>
 			</div>
 			<div class="main2">
 				<div class="contains" id="tu_1">
@@ -1032,7 +1038,126 @@ int main(){
 } 
 					</pre>
 				</div>
-				
+				<div class="contains" id="tu_91">
+					<p>二叉排序树（二叉搜索树）</p>
+					注意：非标准答案<br>
+					我的解析：
+					<div>
+						小于父结点就放左子树，大于放右子树。声名bt,lchild,rchild等东西如果目前没有孩子或者说没有指向下一个，就要设置为NULL否则会一直报错到你怀疑人生。
+					</div>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;algorithm&gt;
+#define error 0
+#define ok 1 
+
+using namespace std;
+
+typedef int status;
+typedef int telemtype;
+
+typedef struct biTNode{
+	telemtype data;
+	struct biTNode *lchild,*rchild;
+}biTNode,*bitree;
+
+int depthbitree(bitree t){
+	if(t==NULL){
+		return (0);
+	}
+	else{
+		int m=depthbitree(t-&gt;lchild);
+		int n=depthbitree(t-&gt;rchild);
+		if(m&gt;n){
+			return m+1;
+		}
+		else{
+			return n+1;
+		}
+	}
+} 
+
+void visit(bitree t){
+	if(t==NULL){
+		return;
+	}
+	else{
+		if(t!=NULL){
+			visit(t-&gt;lchild);
+		}
+		cout&lt;&lt;t-&gt;data&lt;&lt;" ";
+		if(t!=NULL){
+			visit(t-&gt;rchild);
+		}
+		
+	}
+	return;
+}
+
+
+void stree(bitree &amp;t,int n){
+     
+	if(t==NULL){
+        
+		t=(biTNode*)malloc(sizeof(biTNode));
+		t-&gt;lchild=NULL;
+		t-&gt;rchild=NULL;
+		t-&gt;data=n;
+        
+		return;
+	}
+	if(n&gt;(t-&gt;data)){
+		stree(t-&gt;rchild,n);
+		return;
+	}
+	else if(n&lt;(t-&gt;data)){
+		stree(t-&gt;lchild,n);
+		return;
+	}
+	else{
+		return;
+	}
+	
+}
+
+status destroybitree(bitree &amp;t){
+	if(t){
+		if(t-&gt;lchild){
+			destroybitree(t-&gt;lchild);
+		}
+		if(t-&gt;rchild){
+			destroybitree(t-&gt;rchild);
+		}
+		free(t);
+	}
+	return ok;
+}
+bitree bt;
+
+int main()
+{
+    bt=NULL;
+    
+    int a,nodevalue;
+    cin&gt;&gt;a;
+    for(int i=1;i&lt;=a;i++){
+    	cin&gt;&gt;nodevalue;
+        stree(bt,nodevalue);
+	}
+    int m;
+	m=depthbitree(bt);
+    cout&lt;&lt;m&lt;&lt;endl;
+    visit(bt);
+    destroybitree(bt);
+    return 0;
+}
+
+
+
+					</pre>
+				</div>
 			</div>
 		</div>
 	</body>
