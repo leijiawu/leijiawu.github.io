@@ -21,7 +21,7 @@
 		<div class="main1">
 			<div class="left1">
 				<details class="details1">
-					<summary>数据结构-图-拓展实验</summary>
+					<summary>数据结构-图-早期拓展</summary>
 					<ul>
 						<li><a href="#tu_1">1、第一题</a></li>
 						<li><a href="#tu_2">2、第二题</a></li>
@@ -29,6 +29,17 @@
 						<li><a href="#tu_4">2、第四题</a></li>
 						<li><a href="#tu_5">2、第五题</a></li>
 						<li><a href="#tu_6">2、第六题</a></li>
+					</ul>
+				</details>
+				<details class="details1">
+					<summary>第七章-图-算法拓展</summary>
+					<ul>
+						<li><a href="#tu_71">1、求图邻接点-略</a></li>
+						<li><a href="#tu_72">2、图DFS奇怪的电梯</a></li>
+						<li><a href="#tu_73">3、图BFS奇怪的电梯</a></li>
+						<li><a href="#tu_74">4、最小生成树</a></li>
+						<li><a href="#tu_75">5、最短路径</a></li>
+						<li><a href="#tu_76">6、小民画画-欧拉</a></li>
 					</ul>
 				</details>
 			</div>
@@ -520,6 +531,505 @@ int main(){
 
     return 0;
 }
+					</pre>
+				</div>
+				
+				<div class="contains" id="tu_71">
+					<p>图的基本操作：求第一个邻接点和下一个邻接点</p>
+						注意：非标准答案<br>
+						我的解析：无。<br>
+						code:<br>略。
+				</div>
+				<div class="contains" id="tu_72">
+					<p>图的DFS应用：奇怪的电梯</p>
+					注意：非标准答案<br>
+						我的解析：<br>
+					<div>
+						先把“每一层楼可以到哪几层楼”存为图，然后从顶点a开始dfs到顶点b,如果到b了，就记下该路径的操作数，还有路径数加一，return,继续dfs下一条路径。最后输出路径数还有最小的操作数。
+					</div>
+					<br>code:<br>
+					<pre>
+#include&lt;iostream&gt;
+using namespace std;
+
+int n,a,b,ans=0;
+int m[105][105],visited[105],op[1000],opmin=0,ops=0;
+
+int firstadj(int v){
+	for(int i=1;i&lt;=n;i++){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+int nextadj(int v,int w){
+	for(int i=w+1;i&lt;=n;i++){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+void dfs(int v){
+    //cout&lt;&lt;v;
+	if(v==b){
+		ans++;
+        op[ans]=ops;
+		return;
+	}
+	for(int j=firstadj(v);j&gt;0;j=nextadj(v,j)){
+		if(visited[j]!=1){
+			visited[j]=1;
+			ops++;
+			dfs(j);
+			ops--;
+            visited[j]=0;
+		}
+	}
+    
+	return;
+}
+int main(){
+	cin&gt;&gt;n&gt;&gt;a&gt;&gt;b;
+	
+	for(int i=1;i&lt;=n;i++){
+		int ud;
+		cin&gt;&gt;ud;
+		
+		if(i+ud&lt;=n){
+			m[i][i+ud]=1;
+		}
+		if(i-ud&gt;=1){
+			m[i][i-ud]=1;
+		}
+	}
+	/*
+	for(int i=1;i&lt;=n;i++){
+		for(int j=1;j&lt;=n;j++){
+			cout&lt;&lt;m[i][j]&lt;&lt;" ";
+		}
+		cout&lt;&lt;endl;
+	}
+	*/
+	dfs(a);
+    opmin=op[1];
+    for(int i=1;i&lt;=ans;i++){
+        if(opmin&gt;op[i]){
+            opmin=op[i];
+        }
+    }
+	if(ans!=0){
+		cout&lt;&lt;ans&lt;&lt;" "&lt;&lt;opmin;
+	}
+	else{
+		cout&lt;&lt;"No";
+	}
+	
+	return 0;
+}
+
+
+					</pre>
+				</div>
+				<div class="contains" id="tu_73">
+					<p>图的BFS应用：奇怪的电梯</p>
+					注意：非标准答案<br>
+						我的解析：
+					<div>
+						这题就是用BFS, 但是坑点是在BFS里面求邻接点的时候，一般我们是从求第一个到求最后一个，而这题要倒着求邻接点，从最后一个往第一个，比如原本a的邻接点是bcde, 那么这题就要从后往前也就是edcb。然后答案不输出起点。最小操作数用的上一题的DFS。
+					</div>
+					<br>code:<br>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;queue&gt;
+using namespace std;
+
+int n,a,b,ans=0;
+int m[105][105],visited[105],op[1000],opmin=0,ops=0;
+queue&lt;int&gt; q;
+
+int firstadj(int v){
+	for(int i=1;i&lt;=n;i++){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+int rfirstadj(int v){
+	for(int i=n;i&gt;=1;i--){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+int nextadj(int v,int w){
+	for(int i=w+1;i&lt;=n;i++){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+int rnextadj(int v,int w){
+	for(int i=w-1;i&gt;=1;i--){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+void dfs(int v){
+    //cout&lt;&lt;v;
+	if(v==b){
+		ans++;
+        op[ans]=ops;
+		return;
+	}
+	for(int j=firstadj(v);j&gt;0;j=nextadj(v,j)){
+		if(visited[j]!=1){
+			visited[j]=1;
+			ops++;
+			dfs(j);
+			ops--;
+            visited[j]=0;
+		}
+	}
+	return;
+}
+
+
+
+void bfs(int v){
+    q.push(v);
+	visited[v]=1;
+	//cout&lt;&lt;v&lt;&lt;" ";
+	while(!q.empty()){
+			
+		int c=q.front();
+		q.pop();
+		for(int j=rfirstadj(c);j&gt;0;j=rnextadj(c,j)){
+			if(visited[j]!=1){
+					
+				q.push(j);
+				visited[j]=1;
+				cout&lt;&lt;j&lt;&lt;" ";
+				if(j==b){
+					cout&lt;&lt;endl;
+					return;
+				}
+			}		
+		}
+	}
+	cout&lt;&lt;endl;
+    return;
+}
+
+
+int main(){
+	
+	cin&gt;&gt;n&gt;&gt;a&gt;&gt;b;
+	for(int i=1;i&lt;=n;i++){
+		int ud;
+		cin&gt;&gt;ud;
+		
+		if(i+ud&lt;=n){
+			m[i][i+ud]=1;
+		}
+		if(i-ud&gt;=1){
+			m[i][i-ud]=1;
+		}
+	}
+	/*
+	for(int i=1;i&lt;=n;i++){
+		for(int j=1;j&lt;=n;j++){
+			cout&lt;&lt;m[i][j]&lt;&lt;" ";
+		}
+		cout&lt;&lt;endl;
+	}
+	*/
+	
+	bfs(a);
+	for(int i=1;i&lt;=n;i++){
+		visited[i]=0;
+	}
+	dfs(a);
+	opmin=op[1];
+    for(int i=1;i&lt;=ans;i++){
+        if(opmin&gt;op[i]){
+            opmin=op[i];
+        }
+    }
+	if(ans!=0){
+		cout&lt;&lt;opmin;
+	}
+	else{
+		cout&lt;&lt;"No";
+	}
+	return 0;
+}
+
+
+					</pre>
+				</div>
+				<div class="contains" id="tu_74">
+					<p>图的应用：最小生成树</p>
+					注意：非标准答案<br>
+						我的解析：
+					<div>
+						默认第一个点遍历过，对于每一个顶点都for一下（每次挑一个顶点加入生成树），每次for看一下剩余的没有加入生成树的顶点能不能通向生成树，如果能就选出花费最小的那个点加入生成树。
+					</div>
+					<br>code:<br>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+
+int n,e,arc[1005],m[105][105],visited[105],ids[105][105],ans[105],iid=1,adup=0,eed[105];
+
+
+int firstadj(int v){
+	for(int i=0;i&lt;n;i++){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+int nextadj(int v,int w){
+	for(int i=w+1;i&lt;n;i++){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+int main(){
+	
+	cin&gt;&gt;n&gt;&gt;e;
+	for(int i=1;i&lt;=e;i++){
+		int id,a,b,c;
+		cin&gt;&gt;id&gt;&gt;a&gt;&gt;b&gt;&gt;c;
+		arc[id]=c;//保存边的权值 
+		arc[id]=c;//保存边的权值
+		ids[a][b]=id;//保存边的id 
+		ids[b][a]=id;//保存边的id 
+		m[a][b]=1;//保存为图，用来 firstadj和 nextadj
+		m[b][a]=1;//保存为图，用来 firstadj和 nextadj
+	}
+	
+	visited[0]=1;
+	
+	for(int k=1;k&lt;n;k++){
+		int crlen=0,mini=0,minj=0;
+	    int ii=1;
+		for(int i=1;i&lt;n;i++){//剩余的没有加入的点 
+			if(visited[i]!=1){
+				for(int j=firstadj(i);j&gt;-1;j=nextadj(i,j)){//如果剩余的点的邻接点在堆里面就考虑考虑。。。 
+					if(visited[j]==1){
+//j是邻接点，如果邻接点访问过就是邻接点已经在 生成树里面了，
+//但这时还不懂i点（还没加入生成树的点）到j点的花费是不是最小的，
+//所以就要跟crlen来比较，
+//让crlen来存花费最小的边的权值，mini和minj用来记录这条边的两个端点。
+						if(ii++==1){ 
+							mini=i;
+							minj=j;
+							crlen=arc[ids[j][i]];
+						}
+						
+						if(crlen&gt;arc[ids[j][i]]){
+							mini=i;//最小权值边的一个端点 
+							minj=j;//最小权值边的另一个端点 
+							crlen=arc[ids[j][i]];//保存为边的最小权值
+						}
+					}
+				}	
+			}
+		}
+		
+		if(eed[ids[mini][minj]]!=1){
+			ans[iid++]=ids[mini][minj];//将边的id加入答案数组 
+			eed[ids[mini][minj]]=1; 
+		} 
+	
+		visited[mini]=1;
+		visited[minj]=1;
+		adup+=arc[ids[mini][minj]];//总add up长度 
+	}
+	
+	sort(ans,ans+n);//从小到大排序一下 
+	cout&lt;&lt;endl;
+	cout&lt;&lt;adup&lt;&lt;endl;
+	for(int i=1;i&lt;iid;i++){
+		cout&lt;&lt;ans[i]&lt;&lt;" ";
+	}
+	return 0;
+}
+					</pre>
+				</div>
+				<div class="contains" id="tu_75">
+					<p>图的应用：最短路径</p>
+					注意：非标准答案<br>
+						我的解析：
+					<div>
+						输入顶点数，边数，输入每个顶点的名字，再输入每一条边的两个端点和权值。最后输入起点和终点。直接用第二题dfs的代码改一下就行了。那么怎么改呢，第二题存的是累加的操作数，那这里就改成累加的权值。第二行输入全部顶点名字不用鸟它因为输入的是数字。
+					</div>
+					<br>code:<br>
+					<pre>
+#include&lt;iostream&gt;
+#include&lt;queue&gt;
+using namespace std;
+int vn,an,m[105][105],visited[105],start,finish,ans=0,crtcost=0,minc=0;
+queue&lt;int&gt; waiting;
+
+int firstadj(int v){
+	for(int i=0;i&lt;vn;i++){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+int nextadj(int v,int w){
+	for(int i=w+1;i&lt;vn;i++){
+		if(m[v][i]!=0){
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+void dfs(int v){
+    
+	if(v==finish){
+		waiting.push(crtcost);
+		return;
+	}
+	for(int j=firstadj(v);j&gt;-1;j=nextadj(v,j)){
+		if(visited[j]!=1){
+			visited[j]=1;
+			crtcost+=m[v][j];
+			dfs(j);
+			crtcost-=m[v][j];
+            visited[j]=0;
+		}
+	}
+    
+	return;
+}
+
+
+int main(){
+	cin&gt;&gt;vn&gt;&gt;an;
+	string lllll;//不管了，顶点应该都是数字吧，嘻嘻
+	cin&gt;&gt;lllll;
+	for(int i=1;i&lt;=an;i++){
+		char a,b;
+		int c;
+		cin&gt;&gt;a&gt;&gt;b&gt;&gt;c;
+		int vi=a-'0';
+		int vj=b-'0';
+		m[vi][vj]=c;
+	}
+	cin&gt;&gt;start&gt;&gt;finish;
+	visited[start]=1;
+	/*
+	for(int i=0;i&lt;vn;i++){
+		for(int j=0;j&lt;vn;j++){
+			cout&lt;&lt;m[i][j]&lt;&lt;" ";
+			
+		}
+		cout&lt;&lt;endl;
+	}*/
+	dfs(start);
+	if(!waiting.empty()){
+		minc=waiting.front();
+	}
+	while(!waiting.empty()){
+		if(minc&gt;waiting.front()){
+			minc=waiting.front();
+			waiting.pop();
+		}
+		else{
+			waiting.pop();
+		}
+	}
+	ans=minc;
+	if(ans!=0){
+		cout&lt;&lt;ans;
+	}else{
+		cout&lt;&lt;"NO";
+	}
+	return 0;
+}
+					</pre>
+				</div>
+				<div class="contains" id="tu_76">
+					<p>图的应用：小民画画</p>
+					注意：非标准答案<br>
+						我的解析：
+					<div>
+						直接看每个顶点连有多少条边, 别重复就行，比如我的m[1][2]和m[2][1]只算一条边。kd是k点的度数的意思。
+					</div>
+					<br>code:<br>
+					<pre>
+#include&lt;iostream&gt;
+using namespace std;
+
+int vn,an,m[105][105],ans=0,one=1;
+
+
+int main(){
+	
+	cin&gt;&gt;vn&gt;&gt;an;
+	string s;
+	cin&gt;&gt;s;
+	
+	for(int i=1;i&lt;=an;i++){
+		char a,b;
+		cin&gt;&gt;a&gt;&gt;b;
+		int vi=a-'a';
+		int vj=b-'a';
+		m[vi][vj]=1;
+		m[vj][vi]=1;
+	}
+	for(int k=0;k&lt;vn;k++){
+		int kd=0;
+		for(int t=0;t&lt;vn;t++){
+			if(m[k][t]!=0){
+				kd++;
+			}
+		} 
+		if(kd%2!=0){
+			one=0;
+			ans++;
+		}
+	}
+	
+	if(one){
+		cout&lt;&lt;1;
+	}
+	else{
+		cout&lt;&lt;ans/2;
+	}
+	
+	return 0;
+} 
 					</pre>
 				</div>
 				
